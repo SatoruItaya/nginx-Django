@@ -1,0 +1,22 @@
+version: '3.7'
+
+services:
+  gunicorn:
+    image: gunicorn:latest
+    container_name: gunicorn
+    volumes:
+      - .:/usr/src/app/
+      - gunicorn:/var/run/gunicorn
+  nginx:
+    image: nginx:1.17.7
+    container_name: nginx
+    depends_on:
+      - gunicorn
+    ports:
+      - "80:80"
+    volumes:
+      - ./gunicorn.conf:/etc/nginx/conf.d/default.conf
+      - gunicorn:/var/run/gunicorn
+volumes:
+  gunicorn:
+    driver: local
